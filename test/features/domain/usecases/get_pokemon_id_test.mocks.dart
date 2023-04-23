@@ -89,4 +89,55 @@ class MockPokedexRepository extends _i1.Mock implements _i3.PokedexRepository {
           ),
         )),
       ) as _i4.Future<_i2.Either<_i5.Failure, _i6.Pokemon>>);
+  @override
+  _i4.Future<_i2.Either<_i5.Failure, _i6.Pokemon>> addFavorite(
+          _i6.Pokemon? pokemon) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #addFavorite,
+          [pokemon],
+        ),
+        returnValue: _i4.Future<_i2.Either<_i5.Failure, _i6.Pokemon>>.value(
+            _FakeEither_0<_i5.Failure, _i6.Pokemon>(
+          this,
+          Invocation.method(
+            #addFavorite,
+            [pokemon],
+          ),
+        )),
+        returnValueForMissingStub:
+            _i4.Future<_i2.Either<_i5.Failure, _i6.Pokemon>>.value(
+                _FakeEither_0<_i5.Failure, _i6.Pokemon>(
+          this,
+          Invocation.method(
+            #addFavorite,
+            [pokemon],
+          ),
+        )),
+      ) as _i4.Future<_i2.Either<_i5.Failure, _i6.Pokemon>>);
+  @override
+  _i4.Future<_i2.Either<_i5.Failure, _i6.Pokemon>> removeFavorite(int? id) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #removeFavorite,
+          [id],
+        ),
+        returnValue: _i4.Future<_i2.Either<_i5.Failure, _i6.Pokemon>>.value(
+            _FakeEither_0<_i5.Failure, _i6.Pokemon>(
+          this,
+          Invocation.method(
+            #removeFavorite,
+            [id],
+          ),
+        )),
+        returnValueForMissingStub:
+            _i4.Future<_i2.Either<_i5.Failure, _i6.Pokemon>>.value(
+                _FakeEither_0<_i5.Failure, _i6.Pokemon>(
+          this,
+          Invocation.method(
+            #removeFavorite,
+            [id],
+          ),
+        )),
+      ) as _i4.Future<_i2.Either<_i5.Failure, _i6.Pokemon>>);
 }

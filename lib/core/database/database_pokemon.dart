@@ -54,7 +54,7 @@ class DBPokedex {
     return await db.delete('Pokemon', where: 'id = ?', whereArgs: [id]);
   }
 
-  Future<PokemonModel> getPokemonId(int id) async {
+  Future<PokemonModel?> getPokemonId(int id) async {
     final db = await database;
     final res = await db.query('Pokemon', where: 'id = ?', whereArgs: [id]);
 
@@ -65,7 +65,7 @@ class DBPokedex {
     return PokemonModel.fromJson(res.first);
   }
 
-  Future<PokemonModel> getPokemonName(String name) async {
+  Future<PokemonModel?> getPokemonName(String name) async {
     final db = await database;
     final res = await db.query('Pokemon', where: 'name = ?', whereArgs: [name]);
 

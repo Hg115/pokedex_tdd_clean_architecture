@@ -6,4 +6,6 @@ import '../../../../core/error/failures.dart';
 abstract class PokedexRepository {
   Future<Either<Failure, Pokemon>> getPokemonId(int id);
   Future<Either<Failure, Pokemon>> getPokemonName(String name);
+  Future<Either<Failure, Pokemon>> addFavorite(Pokemon pokemon);
+  Future<Either<Failure, Pokemon>> removeFavorite(int id);
 }
