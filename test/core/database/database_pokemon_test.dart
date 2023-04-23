@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pokedex_tdd_clean_architecture/features/pokedex/data/models/ability_model.dart';
 import 'package:pokedex_tdd_clean_architecture/features/pokedex/data/models/held_item_model.dart';
@@ -14,22 +13,15 @@ import 'package:pokedex_tdd_clean_architecture/features/pokedex/data/models/type
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-// void sqfliteTestInit() {
-//   // Initialize ffi implementation.
-//   sqfliteFfiInit();
-
-//   // Set global factory.
-//   databaseFactory = databaseFactoryFfi;
-// }
-
 Future main() async {
   sqfliteFfiInit();
-  //
+
   late Database db;
   databaseFactory = databaseFactoryFfi;
 
   setUp(() async {
-    db = await openDatabase(inMemoryDatabasePath, singleInstance: true);
+    db = await openDatabase(inMemoryDatabasePath,
+        singleInstance: false, readOnly: true);
   });
 
   const tPokemonModel = PokemonModel(
@@ -111,7 +103,7 @@ Future main() async {
       "should insert a pokemon on the table",
       () async {
         //act
-        await db.insert(
+        final inst = await db.insert(
           'Pokemon',
           {
             'id': tPokemonModel.id,
@@ -120,8 +112,91 @@ Future main() async {
           },
         );
         //arrange
-        //final resp = await db.query('Pokemon');
+        final resp = await db.query('Pokemon');
         //assert
+
+        expect(resp, inst);
+      },
+    );
+
+    test(
+      "should remove a pokemon on the table",
+      () async {
+        //act
+        final remove = await db
+            .delete('Pokemon', where: 'id = ?', whereArgs: [tPokemonModel.id]);
+        //assert
+        expect(remove, 1);
+      },
+    );
+
+    test(
+      "Should get pokemon by id on the database",
+      () async {
+        //act
+        final inst = await db.query('Pokemon',
+            columns: ['data'], where: 'id', whereArgs: [tPokemonModel.id]);
+
+        //arrange
+        final result = PokemonModel.fromJson(
+          json.decode(
+            Map.from(inst.first)['data'],
+          ),
+        );
+        //assert
+        expect(result, tPokemonModel);
+      },
+    );
+
+    test(
+      "Should get pokemon by name on the database",
+      () async {
+        //act
+        final inst = await db.query('Pokemon',
+            columns: ['data'], where: 'name', whereArgs: [tPokemonModel.name]);
+
+        //arrange
+        final result =
+            PokemonModel.fromJson(json.decode(Map.from(inst.first)['data']));
+        //assert
+        expect(result, tPokemonModel);
+      },
+    );
+
+    test(
+      'should get a valid pokemon from database',
+      () async {
+        // act
+        final res = await db.query('Pokemon', columns: ['data']);
+
+        final expected = PokemonModel.fromJson(
+          json.decode(Map.from(res.first)['data']),
+        );
+
+        // assert
+        expect(expected, isA<PokemonModel>());
+      },
+    );
+
+    test(
+      'should get a valid list of pokemon from database',
+      () async {
+        // act
+        final resultdb = await db.query('Pokemon', columns: ['data']);
+
+        final list = resultdb
+            .map(
+              (s) => PokemonModel.fromJson(
+                json.decode(
+                  Map.from(s)['data'],
+                ),
+              ),
+            )
+            .toList();
+
+        // assert
+        expect(list, isA<List<PokemonModel>>());
+        expect(list.length, resultdb.length);
       },
     );
   });
