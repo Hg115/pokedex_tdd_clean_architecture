@@ -58,11 +58,11 @@ class DBPokedex {
     final db = await database;
     final res = await db.query('Pokemon', where: 'id = ?', whereArgs: [id]);
 
-    if (res.isEmpty) {
-      throw Exception('No se encontó pokemon con el id proporcionado');
-    }
+    // if (res.isEmpty) {
+    //   throw Exception('No se encontó pokemon con el id proporcionado');
+    // }
 
-    return PokemonModel.fromJson(res.first);
+    return res.isEmpty ? null : _getSinglePokemon(res.first);
   }
 
   Future<PokemonModel?> getPokemonName(String name) async {

@@ -20,59 +20,60 @@ Future main() async {
   databaseFactory = databaseFactoryFfi;
 
   setUp(() async {
-    db = await openDatabase(inMemoryDatabasePath,
-        singleInstance: false, readOnly: true);
+    db = await openDatabase(inMemoryDatabasePath);
   });
 
+  const tPokemonAbilities = AbilityModel(
+      ability: SpeciesModel(
+          name: 'limber', url: 'https://pokeapi.co/api/v2/ability/7/'),
+      isHidden: false,
+      slot: 1);
+
+  const tPokemonHeldItem = HeldItemModel(
+      item: SpeciesModel(
+          name: 'metal-powder', url: 'https://pokeapi.co/api/v2/item/234/'));
+
+  const tPokemonMoves = MoveModel(
+      move: SpeciesModel(
+          name: 'transform', url: 'https://pokeapi.co/api/v2/move/144/'));
+
+  const tPokemonSpecies = SpeciesModel(
+      name: 'ditto', url: 'https://pokeapi.co/api/v2/pokemon-species/132/');
+
+  const tPokemonSprites = SpritesModel(
+    backDefault:
+        'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/132.png',
+    backShiny:
+        'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/132.png',
+    frontDefault:
+        'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png',
+    frontShiny:
+        'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/132.png',
+  );
+
+  const tPokemonStats = StatsModel(
+      baseStat: 48,
+      effort: 1,
+      stat: SpeciesModel(name: 'hp', url: 'https://pokeapi.co/api/v2/stat/1/'));
+
+  const tPokemonType = TypeModel(
+      slot: 1,
+      type: SpeciesModel(
+          name: 'normal', url: 'https://pokeapi.co/api/v2/type/1/'));
+
   const tPokemonModel = PokemonModel(
-      abilities: [
-        AbilityModel(
-            ability: SpeciesModel(
-                name: 'limber', url: 'https://pokeapi.co/api/v2/ability/7/'),
-            isHidden: false,
-            slot: 1)
-      ],
+      abilities: [tPokemonAbilities],
       baseExperience: 101,
       height: 3,
-      heldItems: [
-        HeldItemModel(
-            item: SpeciesModel(
-                name: 'metal-powder',
-                url: 'https://pokeapi.co/api/v2/item/234/'))
-      ],
+      heldItems: [tPokemonHeldItem],
       id: 132,
-      moves: [
-        MoveModel(
-            move: SpeciesModel(
-                name: 'transform', url: 'https://pokeapi.co/api/v2/move/144/'))
-      ],
+      moves: [tPokemonMoves],
       name: 'ditto',
       order: 214,
-      species: SpeciesModel(
-          name: 'ditto', url: 'https://pokeapi.co/api/v2/pokemon-species/132/'),
-      sprites: SpritesModel(
-        backDefault:
-            'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/132.png',
-        backShiny:
-            'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/132.png',
-        frontDefault:
-            'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png',
-        frontShiny:
-            'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/132.png',
-      ),
-      stats: [
-        StatsModel(
-            baseStat: 48,
-            effort: 1,
-            stat: SpeciesModel(
-                name: 'hp', url: 'https://pokeapi.co/api/v2/stat/1/'))
-      ],
-      types: [
-        TypeModel(
-            slot: 1,
-            type: SpeciesModel(
-                name: 'normal', url: 'https://pokeapi.co/api/v2/type/1/'))
-      ],
+      species: tPokemonSpecies,
+      sprites: tPokemonSprites,
+      stats: [tPokemonStats],
+      types: [tPokemonType],
       weight: 40);
 
   group('Pokemon', () {
@@ -103,7 +104,7 @@ Future main() async {
       "should insert a pokemon on the table",
       () async {
         //act
-        final inst = await db.insert(
+        await db.insert(
           'Pokemon',
           {
             'id': tPokemonModel.id,
@@ -115,7 +116,11 @@ Future main() async {
         final resp = await db.query('Pokemon');
         //assert
 
-        expect(resp, inst);
+        expect(resp.first, {
+          'id': tPokemonModel.id,
+          'name': tPokemonModel.name,
+          'data': json.encode(tPokemonModel.toJson()),
+        });
       },
     );
 
@@ -135,7 +140,7 @@ Future main() async {
       () async {
         //act
         final inst = await db.query('Pokemon',
-            columns: ['data'], where: 'id', whereArgs: [tPokemonModel.id]);
+            columns: ['data'], where: 'id = ?', whereArgs: [tPokemonModel.id]);
 
         //arrange
         final result = PokemonModel.fromJson(
@@ -153,7 +158,9 @@ Future main() async {
       () async {
         //act
         final inst = await db.query('Pokemon',
-            columns: ['data'], where: 'name', whereArgs: [tPokemonModel.name]);
+            columns: ['data'],
+            where: 'name = ?',
+            whereArgs: [tPokemonModel.name]);
 
         //arrange
         final result =
