@@ -166,42 +166,67 @@ void main() {
         expect(() => call(), throwsA(const TypeMatcher<CacheException>()));
       },
     );
-
-    group('RemovePokemon', () {
-      test(
-        "should if pokemon exists ",
-        () async {
-          //arrange
-          when(mockDBPokedex.getPokemonId(any))
-              .thenAnswer((_) async => tPokemonModel);
-          //act
-          dataSource.removeFavorite(tPokemonModel.id);
-          //assert
-
-          verify(mockDBPokedex.getPokemonId(tPokemonModel.id));
-        },
-      );
-
-      test(
-        "should throw a CacheException when an errors ocurred when id isn't found",
-        () async {
-          //arrange
-          when(mockDBPokedex.getPokemonId(any)).thenAnswer((_) async => null);
-          //act
-          final call = dataSource.removeFavorite;
-          //assert
-          expect(() => call(tPokemonModel.id),
-              throwsA(const TypeMatcher<CacheException>()));
-          verifyNever(mockDBPokedex.deletePokemon(tPokemonModel.id));
-        },
-      );
-    });
   });
+  group('RemovePokemon', () {
+    test(
+      "should if pokemon exists ",
+      () async {
+        //arrange
+        when(mockDBPokedex.getPokemonId(any))
+            .thenAnswer((_) async => tPokemonModel);
+        //act
+        dataSource.removeFavorite(tPokemonModel.id);
+        //assert
 
+        verify(mockDBPokedex.getPokemonId(tPokemonModel.id));
+      },
+    );
+
+    test(
+      "should throw a CacheException when an errors ocurred when id isn't found",
+      () async {
+        //arrange
+        when(mockDBPokedex.getPokemonId(any)).thenAnswer((_) async => null);
+        //act
+        final call = dataSource.removeFavorite;
+        //assert
+        expect(() => call(tPokemonModel.id),
+            throwsA(const TypeMatcher<CacheException>()));
+        verifyNever(mockDBPokedex.deletePokemon(tPokemonModel.id));
+      },
+    );
+  });
   group('AddPokemon', () {
     test(
       "should add a pokemon to favorite list",
-      () async {},
+      () async {
+        test(
+          "should add pokemon in the database",
+          () async {
+            //arrange
+            when(mockDBPokedex.newPokemon(any))
+                .thenAnswer((_) async => tPokemonModel.id);
+            //act
+            await dataSource.addFavorite(tPokemonModel);
+            //assert
+            verify(mockDBPokedex.newPokemon(tPokemonModel));
+          },
+        );
+
+        test(
+          "should throw a CacheException when an errors happends at the database",
+          () async {
+            //arrange
+            when(mockDBPokedex.newPokemon(any)).thenThrow(DatabaseException);
+            //act
+            final call = dataSource.addFavorite;
+            //assert
+
+            expect(() => call(tPokemonModel),
+                throwsA(const TypeMatcher<CacheException>()));
+          },
+        );
+      },
     );
   });
 }
