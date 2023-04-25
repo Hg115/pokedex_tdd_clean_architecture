@@ -63,24 +63,8 @@ class PokemonModel extends Pokemon {
       'species': species,
       'sprites': sprites,
       'stats': stats,
-      'type': types,
+      'types': types,
       'weight': weight
     };
   }
-
-  PokemonModel copy() => PokemonModel(
-        abilities: abilities,
-        baseExperience: baseExperience,
-        height: height,
-        heldItems: heldItems,
-        id: id,
-        moves: moves,
-        name: name,
-        order: order,
-        species: species,
-        sprites: sprites,
-        stats: stats,
-        types: types,
-        weight: weight,
-      );
 }

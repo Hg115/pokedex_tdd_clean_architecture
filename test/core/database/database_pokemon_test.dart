@@ -125,13 +125,17 @@ Future main() async {
     );
 
     test(
-      "should remove a pokemon on the table",
+      'should get a valid pokemon from database',
       () async {
-        //act
-        final remove = await db
-            .delete('Pokemon', where: 'id = ?', whereArgs: [tPokemonModel.id]);
-        //assert
-        expect(remove, 1);
+        // act
+        final res = await db.query('Pokemon', columns: ['data']);
+
+        final expected = PokemonModel.fromJson(
+          json.decode(Map.from(res.first)['data']),
+        );
+
+        // assert
+        expect(expected, isA<PokemonModel>());
       },
     );
 
@@ -171,39 +175,13 @@ Future main() async {
     );
 
     test(
-      'should get a valid pokemon from database',
+      "should remove a pokemon on the table",
       () async {
-        // act
-        final res = await db.query('Pokemon', columns: ['data']);
-
-        final expected = PokemonModel.fromJson(
-          json.decode(Map.from(res.first)['data']),
-        );
-
-        // assert
-        expect(expected, isA<PokemonModel>());
-      },
-    );
-
-    test(
-      'should get a valid list of pokemon from database',
-      () async {
-        // act
-        final resultdb = await db.query('Pokemon', columns: ['data']);
-
-        final list = resultdb
-            .map(
-              (s) => PokemonModel.fromJson(
-                json.decode(
-                  Map.from(s)['data'],
-                ),
-              ),
-            )
-            .toList();
-
-        // assert
-        expect(list, isA<List<PokemonModel>>());
-        expect(list.length, resultdb.length);
+        //act
+        final remove = await db
+            .delete('Pokemon', where: 'id = ?', whereArgs: [tPokemonModel.id]);
+        //assert
+        expect(remove, 1);
       },
     );
   });

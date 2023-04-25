@@ -64,9 +64,9 @@ class PokedexLocalDataSourceImpl extends PokedexLocalDataSource {
   @override
   Future<PokemonModel> removeFavorite(int id) async {
     try {
-      final remove = db.getPokemonId(id);
+      final remove = await db.getPokemonId(id);
       await db.deletePokemon(id);
-      return remove;
+      return remove!;
     } catch (error) {
       throw CacheException();
     }

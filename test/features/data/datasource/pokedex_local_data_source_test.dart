@@ -200,32 +200,27 @@ void main() {
     test(
       "should add a pokemon to favorite list",
       () async {
-        test(
-          "should add pokemon in the database",
-          () async {
-            //arrange
-            when(mockDBPokedex.newPokemon(any))
-                .thenAnswer((_) async => tPokemonModel.id);
-            //act
-            await dataSource.addFavorite(tPokemonModel);
-            //assert
-            verify(mockDBPokedex.newPokemon(tPokemonModel));
-          },
-        );
+        //arrange
+        when(mockDBPokedex.newPokemon(any))
+            .thenAnswer((_) async => tPokemonModel.id);
+        //act
+        await dataSource.addFavorite(tPokemonModel);
+        //assert
+        verify(mockDBPokedex.newPokemon(tPokemonModel));
+      },
+    );
 
-        test(
-          "should throw a CacheException when an errors happends at the database",
-          () async {
-            //arrange
-            when(mockDBPokedex.newPokemon(any)).thenThrow(DatabaseException);
-            //act
-            final call = dataSource.addFavorite;
-            //assert
+    test(
+      "should throw a CacheException when an errors happends at the database",
+      () async {
+        //arrange
+        when(mockDBPokedex.newPokemon(any)).thenThrow(DatabaseException);
+        //act
+        final call = dataSource.addFavorite;
+        //assert
 
-            expect(() => call(tPokemonModel),
-                throwsA(const TypeMatcher<CacheException>()));
-          },
-        );
+        expect(() => call(tPokemonModel),
+            throwsA(const TypeMatcher<CacheException>()));
       },
     );
   });

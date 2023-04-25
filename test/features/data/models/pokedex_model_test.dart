@@ -148,7 +148,7 @@ void main() {
         'species': tSpecies,
         'sprites': tSprites,
         'stats': tStats,
-        'type': tType,
+        'types': tType,
         'weight': 40,
       };
       expect(result, expectedMap);
