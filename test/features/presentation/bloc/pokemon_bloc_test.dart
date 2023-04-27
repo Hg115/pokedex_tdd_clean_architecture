@@ -12,7 +12,6 @@ import 'package:pokedex_tdd_clean_architecture/features/pokedex/data/models/spec
 import 'package:pokedex_tdd_clean_architecture/features/pokedex/data/models/sprites_model.dart';
 import 'package:pokedex_tdd_clean_architecture/features/pokedex/data/models/stats_model.dart';
 import 'package:pokedex_tdd_clean_architecture/features/pokedex/data/models/type_model.dart';
-import 'package:pokedex_tdd_clean_architecture/features/pokedex/domain/entities/pokemon.dart';
 import 'package:pokedex_tdd_clean_architecture/features/pokedex/domain/usescases/get_pokemon_id.dart';
 import 'package:pokedex_tdd_clean_architecture/features/pokedex/domain/usescases/get_pokemon_name.dart';
 import 'package:pokedex_tdd_clean_architecture/features/pokedex/presentation/bloc/bloc.dart';
@@ -41,7 +40,9 @@ void main() {
         getConcreteName: mockGetConcreteName,
         inputConverter: mockInputConverter);
   });
-  const tPokedexId = Pokemon(
+  const tPokeId = 132;
+  const tPokeName = "ditto";
+  const tPokedexId = PokemonModel(
       abilities: [
         AbilityModel(
             ability: SpeciesModel(
@@ -100,6 +101,9 @@ void main() {
       "should get data from the concrete id pokemon ",
       () async {
         //arrange
+        when(mockInputConverter.stringToUnsignedInteger(any))
+            .thenReturn(Right(tPokedexId.id));
+
         when(mockGetConcreteId(any))
             .thenAnswer((_) async => const Right(tPokedexId));
         //act
@@ -107,7 +111,7 @@ void main() {
         await untilCalled(mockGetConcreteId(any));
 
         //assert
-        verifyNever(mockGetConcreteId(ParamsId(id: tPokedexId.id)));
+        verify(mockGetConcreteId(ParamsId(id: tPokedexId.id)));
       },
     );
 
@@ -115,12 +119,15 @@ void main() {
       "should emit [Loading, Loaded], when data is gotten succesfully",
       () async {
         //arrange
+        when(mockInputConverter.stringToUnsignedInteger(any))
+            .thenReturn(Right(tPokedexId.id));
+
         when(mockGetConcreteId(any))
             .thenAnswer((_) async => const Right(tPokedexId));
         //assert Later
         final expected = [
           Loading(),
-          const Error(message: SERVER_FAILURE_MESSAGE)
+          const LoadedPokemon(pokemon: tPokedexId),
         ];
 
         expectLater(bloc.stream, emitsInOrder(expected));
@@ -133,6 +140,9 @@ void main() {
       'should emit [Loading, Error] when getting data fails',
       () async {
         //arrange
+        when(mockInputConverter.stringToUnsignedInteger(any))
+            .thenReturn(Right(tPokedexId.id));
+
         when(mockGetConcreteId(any))
             .thenAnswer((_) async => Left(ServerFailure()));
         //assert later
@@ -143,7 +153,7 @@ void main() {
 
         expectLater(bloc.stream, emitsInOrder(expected));
         //act
-        bloc.add(GetPokemonId(tPokedexId.id));
+        bloc.add(const GetPokemonId(tPokeId));
       },
     );
 
@@ -151,6 +161,9 @@ void main() {
       'should emit [Loading, Error] with a proper message for the error when getting data fails',
       () async {
         //arrange
+        when(mockInputConverter.stringToUnsignedInteger(any))
+            .thenReturn(Right(tPokedexId.id));
+
         when(mockGetConcreteId(any))
             .thenAnswer((_) async => Left(CacheFailure()));
         //assert later
@@ -171,14 +184,15 @@ void main() {
       "should get data from the concrete name pokemon ",
       () async {
         //arrange
-        when(mockGetConcreteId(any))
+
+        when(mockGetConcreteName(any))
             .thenAnswer((_) async => const Right(tPokedexId));
         //act
-        bloc.add(GetPokemonName(tPokedexId.name));
+        bloc.add(const GetPokemonName(tPokeName));
         await untilCalled(mockGetConcreteName(any));
 
         //assert
-        verifyNever(mockGetConcreteName(ParamsName(name: tPokedexId.name)));
+        verify(mockGetConcreteName(ParamsName(name: tPokedexId.name)));
       },
     );
 
@@ -189,32 +203,43 @@ void main() {
         when(mockGetConcreteName(any))
             .thenAnswer((_) async => const Right(tPokedexId));
         //assert Later
-        final expected = [
-          Loading(),
-          const Error(message: SERVER_FAILURE_MESSAGE)
-        ];
+        final expected = [Loading(), const LoadedPokemon(pokemon: tPokedexId)];
 
         expectLater(bloc.stream, emitsInOrder(expected));
         //act
-        bloc.add(GetPokemonName(tPokedexId.name));
+        bloc.add(const GetPokemonName(tPokeName));
       },
     );
 
     test(
       'should emit [Loading, Error] when getting data fails',
       () async {
-        //arrange
+        const String input = "ditto";
+
+        when(mockInputConverter.stringToUnsignedInteger(any))
+            .thenReturn(Right(tPokedexId.id));
+
         when(mockGetConcreteName(any))
             .thenAnswer((_) async => Left(ServerFailure()));
-        //assert later
         final expected = [
           Loading(),
           const Error(message: SERVER_FAILURE_MESSAGE)
         ];
-
         expectLater(bloc.stream, emitsInOrder(expected));
-        //act
-        bloc.add(GetPokemonName(tPokedexId.name));
+        bloc.add(const GetPokemonName(input));
+
+        // //arrange
+        // when(mockGetConcreteName(any))
+        //     .thenAnswer((_) async => Left(ServerFailure()));
+        // //assert later
+        // final expected = [
+        //   Loading(),
+        //   const Error(message: SERVER_FAILURE_MESSAGE)
+        // ];
+
+        // expectLater(bloc.stream, emitsInOrder(expected));
+        // //act
+        // bloc.add(const GetPokemonName(tPokeName));
       },
     );
 
@@ -222,6 +247,11 @@ void main() {
       'should emit [Loading, Error] with a proper message for the error when getting data fails',
       () async {
         //arrange
+        const String input = "ditto";
+
+        when(mockInputConverter.stringToUnsignedInteger(any))
+            .thenReturn(Right(tPokedexId.id));
+
         when(mockGetConcreteName(any))
             .thenAnswer((_) async => Left(CacheFailure()));
         //assert later
@@ -232,7 +262,7 @@ void main() {
 
         expectLater(bloc.stream, emitsInOrder(expected));
         //act
-        bloc.add(GetPokemonName(tPokedexId.name));
+        bloc.add(const GetPokemonName(input));
       },
     );
   });

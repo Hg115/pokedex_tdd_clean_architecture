@@ -143,25 +143,25 @@ class MockGetConcreteName extends _i1.Mock implements _i8.GetConcreteName {
 /// See the documentation for Mockito's code generation for more information.
 class MockInputConverter extends _i1.Mock implements _i9.InputConverter {
   @override
-  _i3.Either<_i6.Failure, String> emptyString(String? str) =>
+  _i3.Either<_i6.Failure, int> stringToUnsignedInteger(String? str) =>
       (super.noSuchMethod(
         Invocation.method(
-          #emptySting,
+          #stringToUnsignedInteger,
           [str],
         ),
-        returnValue: _FakeEither_1<_i6.Failure, String>(
+        returnValue: _FakeEither_1<_i6.Failure, int>(
           this,
           Invocation.method(
-            #emptyString,
+            #stringToUnsignedInteger,
             [str],
           ),
         ),
-        returnValueForMissingStub: _FakeEither_1<_i6.Failure, String>(
+        returnValueForMissingStub: _FakeEither_1<_i6.Failure, int>(
           this,
           Invocation.method(
-            #emptyString,
+            #stringToUnsignedInteger,
             [str],
           ),
         ),
-      ) as _i3.Either<_i6.Failure, String>);
+      ) as _i3.Either<_i6.Failure, int>);
 }

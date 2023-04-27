@@ -3,6 +3,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:pokedex_tdd_clean_architecture/core/util/input_converter.dart';
+import 'package:pokedex_tdd_clean_architecture/features/pokedex/data/models/pokemon_model.dart';
 import 'package:pokedex_tdd_clean_architecture/features/pokedex/domain/usescases/get_pokemon_name.dart';
 import 'package:pokedex_tdd_clean_architecture/features/pokedex/presentation/bloc/pokemon_event.dart';
 import 'package:pokedex_tdd_clean_architecture/features/pokedex/presentation/bloc/pokemon_state.dart';
@@ -27,28 +28,30 @@ class PokemonBloc extends Bloc<PokemonEvent, PokemonState> {
       required this.inputConverter})
       : super(Empty()) {
     on<GetPokemonId>((event, emit) async {
-      final inputEither = await getConcreteId(ParamsId(id: event.id));
+      final inputEither =
+          inputConverter.stringToUnsignedInteger(event.id.toString());
+      //final inputEither = await getConcreteId(ParamsId(id: event.id));
 
       await inputEither.fold(
           (failure) async =>
               emit(const Error(message: INVALID_INPUT_FAILURE_MESSAGE)),
-          (pokemon) async {
+          (integer) async {
         emit(Loading());
-        final failureOrPokemon = await getConcreteId(ParamsId(id: pokemon.id));
+        final failureOrPokemon = await getConcreteId(ParamsId(id: integer));
         _eitherLoadedOrErrorState(emit, failureOrPokemon);
       });
     });
 
     on<GetPokemonName>((event, emit) async {
-      final inputEither = await getConcreteName(ParamsName(name: event.name));
-
+      //final inputEither = await getConcreteName(ParamsName(name: event.name));
+      final inputEither = inputConverter.stringToUnsignedInteger(event.name);
       await inputEither.fold(
           (failure) async =>
               emit(const Error(message: INVALID_INPUT_FAILURE_MESSAGE)),
           (pokemon) async {
         emit(Loading());
         final failureOrPokemon =
-            await getConcreteName(ParamsName(name: pokemon.name));
+            await getConcreteName(ParamsName(name: event.name));
         _eitherLoadedOrErrorState(emit, failureOrPokemon);
       });
     });
