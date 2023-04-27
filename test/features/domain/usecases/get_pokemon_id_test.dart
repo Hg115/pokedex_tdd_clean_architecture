@@ -81,7 +81,7 @@ void main() {
       when(mockPokedexRepository.getPokemonId(any))
           .thenAnswer((_) async => const Right(tPokedexId));
 
-      final result = await usecase(Params(id: tPokedexId.id));
+      final result = await usecase(ParamsId(id: tPokedexId.id));
 
       expect(result, const Right(tPokedexId));
       verify(mockPokedexRepository.getPokemonId(tPokedexId.id));

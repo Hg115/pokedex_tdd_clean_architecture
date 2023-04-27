@@ -6,21 +6,21 @@ import '../../../../core/error/failures.dart';
 import '../../../../core/usecase/usecase.dart';
 import '../repositories/pokemon_repository.dart';
 
-class GetConcreteName implements UseCase<Pokemon, Params> {
+class GetConcreteName implements UseCase<Pokemon, ParamsName> {
   final PokedexRepository repository;
 
   GetConcreteName(this.repository);
 
   @override
-  Future<Either<Failure, Pokemon>> call(Params params) async {
+  Future<Either<Failure, Pokemon>> call(ParamsName params) async {
     return await repository.getPokemonName(params.name);
   }
 }
 
-class Params extends Equatable {
+class ParamsName extends Equatable {
   final String name;
 
-  const Params({required this.name});
+  const ParamsName({required this.name});
 
   @override
   List<Object> get props => [name];

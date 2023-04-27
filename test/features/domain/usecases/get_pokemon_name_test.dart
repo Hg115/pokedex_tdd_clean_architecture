@@ -81,7 +81,7 @@ void main() {
       when(mockPokedexRepository.getPokemonName(any))
           .thenAnswer((_) async => const Right(tPokemonName));
 
-      final result = await usecase(Params(name: tPokemonName.name));
+      final result = await usecase(ParamsName(name: tPokemonName.name));
 
       expect(result, const Right(tPokemonName));
       verify(mockPokedexRepository.getPokemonName(tPokemonName.name));
