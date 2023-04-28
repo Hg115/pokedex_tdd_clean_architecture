@@ -4,8 +4,14 @@ import 'package:pokedex_tdd_clean_architecture/features/pokedex/presentation/blo
 import 'package:pokedex_tdd_clean_architecture/features/pokedex/presentation/bloc/pokemon_state.dart';
 import 'package:pokedex_tdd_clean_architecture/features/pokedex/presentation/widget/search_pokemon.dart';
 import 'package:pokedex_tdd_clean_architecture/features/pokedex/presentation/widget/show_pokemon.dart';
+import 'package:pokedex_tdd_clean_architecture/features/pokedex/presentation/widget/side_menu.dart';
+
+import '../../../../core/database/database_pokemon.dart';
+import '../../data/models/pokemon_model.dart';
 
 class HomePage extends StatelessWidget {
+  static const String routerName = 'Home';
+
   const HomePage({super.key});
 
   @override
@@ -15,6 +21,7 @@ class HomePage extends StatelessWidget {
         centerTitle: true,
         title: const Text('Pokedex'),
       ),
+      drawer: const SideMenu(),
       body: Stack(
         children: const [
           _Header(),
@@ -29,8 +36,6 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -44,6 +49,29 @@ class _Header extends StatelessWidget {
           SearchPokemon(),
           _State(),
         ],
+      ),
+    );
+  }
+}
+
+class _AddFavoriteState extends StatelessWidget {
+  final PokemonModel pokemon;
+  late DBPokedex db;
+
+  _AddFavoriteState(this.pokemon);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(
+          Icons.favorite,
+          size: 10,
+          weight: 10,
+        ),
+        onPressed: () {
+          db.newPokemon(pokemon);
+        },
       ),
     );
   }

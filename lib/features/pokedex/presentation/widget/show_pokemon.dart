@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:pokedex_tdd_clean_architecture/core/database/database_pokemon.dart';
+import 'package:pokedex_tdd_clean_architecture/features/pokedex/data/models/pokemon_model.dart';
 
 import '../../domain/entities/pokemon.dart';
 
@@ -18,7 +20,7 @@ class ShowPokemon extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(
-            height: 20,
+            height: 30,
             child: Text('Nombre e Id del Pokemon',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
           ),
@@ -75,15 +77,16 @@ class _Header extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            ///_AddFavoriteState(pokemon as PokemonModel),
             SizedBox(
-              height: 20,
+              height: 30,
               child: Text(
                 pokemon.name,
                 style: const TextStyle(fontSize: 20),
               ),
             ),
             SizedBox(
-                height: 20,
+                height: 30,
                 child: Text(
                   '${pokemon.id}',
                   style: const TextStyle(fontSize: 20),
@@ -133,7 +136,7 @@ class _PokemonStats extends StatelessWidget {
         ),
         SizedBox(
           height: 40,
-          width: 20,
+          width: 30,
           child: Text("${stats.baseStat}",
               style: TextStyle(color: _colorStats(stats.baseStat))),
         ),

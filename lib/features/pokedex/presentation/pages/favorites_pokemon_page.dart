@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:pokedex_tdd_clean_architecture/features/pokedex/presentation/widget/side_menu.dart';
 
-class FavoritePokemon extends StatelessWidget {
-  const FavoritePokemon({super.key});
+class FavoritePokemonPage extends StatelessWidget {
+  static const String routerName = 'Favorites';
+  const FavoritePokemonPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -9,6 +11,7 @@ class FavoritePokemon extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Favorites Pokemon'),
       ),
+      drawer: const SideMenu(),
     );
   }
 }

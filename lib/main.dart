@@ -20,10 +20,10 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Pokedex',
-        initialRoute: 'homepage',
+        initialRoute: HomePage.routerName,
         routes: {
-          'homepage': (_) => const HomePage(),
-          'favorite': (_) => const FavoritePokemon(),
+          HomePage.routerName: (_) => const HomePage(),
+          FavoritePokemonPage.routerName: (_) => const FavoritePokemonPage(),
         },
         theme: _themeData(),
       ),
