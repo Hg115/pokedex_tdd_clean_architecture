@@ -23,7 +23,7 @@ void init() {
         getConcreteName: sl(),
         inputConverter: sl(),
       ));
-
+  sl.registerLazySingleton(() => InputConverter());
   //use cases
   sl.registerLazySingleton(() => GetConcreteId(sl()));
   sl.registerLazySingleton(() => GetConcreteName(sl()));

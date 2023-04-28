@@ -2,11 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../domain/entities/pokemon.dart';
+import '../../domain/entities/species.dart';
 import '../../domain/entities/stats.dart';
 
 class ShowPokemon extends StatelessWidget {
   final Pokemon pokemon;
-  final Stat stats;
+  final List<Stat> stats;
 
   const ShowPokemon({super.key, required this.pokemon, required this.stats});
 
@@ -14,26 +15,44 @@ class ShowPokemon extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(
-            height: 15,
-            child: Text('Nombre e Id del Pokemon'),
+            height: 20,
+            child: Text('Nombre e Id del Pokemon',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
           ),
-          _Header(pokemon: pokemon),
+          SizedBox(
+            height: 50,
+            child: _Header(pokemon: pokemon),
+          ),
           const SizedBox(
-            height: 15,
-            child: Text('Sprite del Pokemon'),
+            height: 50,
+            child: Text('Sprite del Pokemon',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
           ),
           _PokemonSprites(pokemon: pokemon),
           const SizedBox(
-            height: 15,
-            child: Text('Stats del Pokemon'),
+            height: 50,
+            child: Text('Stats del Pokemon',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
           ),
-          _PokemonStats(stats: stats.baseStat),
+          SizedBox(
+            width: double.infinity,
+            height: 150,
+            child: ListView.separated(
+              itemBuilder: (context, int index) {
+                _PokemonStats(stats: stats[index]);
+              },
+              itemCount: stats.length,
+              separatorBuilder: (BuildContext context, int index) =>
+                  const SizedBox(height: 8),
+            ),
+          ),
           const SizedBox(
-            height: 15,
-            child: Text('Tamaño y Peso del Pokemon'),
+            height: 20,
+            child: Text('Tamaño y Peso del Pokemon',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
           ),
           _SizePokemon(pokemon: pokemon),
         ],
@@ -55,15 +74,21 @@ class _Header extends StatelessWidget {
       children: [
         const SizedBox(height: 8),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Expanded(
+            SizedBox(
+              height: 20,
+              child: Text(
+                pokemon.name,
+                style: const TextStyle(fontSize: 20),
+              ),
+            ),
+            SizedBox(
+                height: 20,
                 child: Text(
-              pokemon.name,
-              style: textTheme.bodyMedium,
-            )),
-            const SizedBox(height: 8),
-            Text('${pokemon.id}'),
+                  '${pokemon.id}',
+                  style: const TextStyle(fontSize: 20),
+                )),
           ],
         ),
       ],
@@ -83,9 +108,9 @@ class _PokemonSprites extends StatelessWidget {
     return FadeInImage(
       placeholder: const AssetImage('assets/loading.gif'),
       image: CachedNetworkImageProvider(pokemon.sprites.frontDefault),
-      height: 20,
-      width: 20,
-      fit: BoxFit.contain,
+      height: 50,
+      width: 50,
+      fit: BoxFit.fill,
     );
   }
 }
@@ -93,20 +118,20 @@ class _PokemonSprites extends StatelessWidget {
 //Stats del Pokemon
 
 class _PokemonStats extends StatelessWidget {
-  final int stats;
+  final Stat stats;
 
   const _PokemonStats({required this.stats});
 
   @override
   Widget build(BuildContext context) {
-    final colorstat = _colorStats(stats);
     return Row(
       children: [
         SizedBox(
+          height: 40,
           width: 30,
           child: Text(
-            '$stats',
-            style: TextStyle(color: colorstat),
+            '${stats.baseStat}',
+            style: TextStyle(color: _colorStats(stats.baseStat)),
           ),
         ),
       ],
@@ -138,13 +163,13 @@ class _SizePokemon extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          child: Text(
-            'Estatura: ${pokemon.height}',
-          ),
+          child: Text('Estatura: ${pokemon.height}',
+              style: const TextStyle(fontSize: 20)),
         ),
         SizedBox(
           child: Text(
             'Peso: ${pokemon.weight}',
+            style: const TextStyle(fontSize: 20),
           ),
         ),
       ],
