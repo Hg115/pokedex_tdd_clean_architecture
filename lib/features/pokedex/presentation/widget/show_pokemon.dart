@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../domain/entities/pokemon.dart';
-import '../../domain/entities/species.dart';
+
 import '../../domain/entities/stats.dart';
 
 class ShowPokemon extends StatelessWidget {
@@ -38,11 +38,11 @@ class ShowPokemon extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
           ),
           SizedBox(
-            width: double.infinity,
-            height: 150,
+            width: 200,
+            height: 300,
             child: ListView.separated(
               itemBuilder: (context, int index) {
-                _PokemonStats(stats: stats[index]);
+                return _PokemonStats(stats: stats[index]);
               },
               itemCount: stats.length,
               separatorBuilder: (BuildContext context, int index) =>
@@ -50,7 +50,7 @@ class ShowPokemon extends StatelessWidget {
             ),
           ),
           const SizedBox(
-            height: 20,
+            height: 50,
             child: Text('Tamaño y Peso del Pokemon',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
           ),
@@ -69,7 +69,6 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
     return Column(
       children: [
         const SizedBox(height: 8),
@@ -125,14 +124,18 @@ class _PokemonStats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(
           height: 40,
-          width: 30,
-          child: Text(
-            '${stats.baseStat}',
-            style: TextStyle(color: _colorStats(stats.baseStat)),
-          ),
+          width: 60,
+          child: Text(stats.stat.name),
+        ),
+        SizedBox(
+          height: 40,
+          width: 20,
+          child: Text("${stats.baseStat}",
+              style: TextStyle(color: _colorStats(stats.baseStat))),
         ),
       ],
     );
@@ -166,6 +169,7 @@ class _SizePokemon extends StatelessWidget {
           child: Text('Estatura: ${pokemon.height}',
               style: const TextStyle(fontSize: 20)),
         ),
+        const SizedBox(height: 10),
         SizedBox(
           child: Text(
             'Peso: ${pokemon.weight}',
