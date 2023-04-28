@@ -1,7 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:pokedex_tdd_clean_architecture/core/database/database_pokemon.dart';
-import 'package:pokedex_tdd_clean_architecture/features/pokedex/data/models/pokemon_model.dart';
 
 import '../../domain/entities/pokemon.dart';
 
