@@ -214,11 +214,6 @@ void main() {
     test(
       'should emit [Loading, Error] when getting data fails',
       () async {
-        const String input = "ditto";
-
-        when(mockInputConverter.stringToUnsignedInteger(any))
-            .thenReturn(Right(tPokedexId.id));
-
         when(mockGetConcreteName(any))
             .thenAnswer((_) async => Left(ServerFailure()));
         final expected = [
@@ -226,20 +221,7 @@ void main() {
           const Error(message: SERVER_FAILURE_MESSAGE)
         ];
         expectLater(bloc.stream, emitsInOrder(expected));
-        bloc.add(const GetPokemonName(input));
-
-        // //arrange
-        // when(mockGetConcreteName(any))
-        //     .thenAnswer((_) async => Left(ServerFailure()));
-        // //assert later
-        // final expected = [
-        //   Loading(),
-        //   const Error(message: SERVER_FAILURE_MESSAGE)
-        // ];
-
-        // expectLater(bloc.stream, emitsInOrder(expected));
-        // //act
-        // bloc.add(const GetPokemonName(tPokeName));
+        bloc.add(GetPokemonName(tPokedexId.name));
       },
     );
 
@@ -247,10 +229,6 @@ void main() {
       'should emit [Loading, Error] with a proper message for the error when getting data fails',
       () async {
         //arrange
-        const String input = "ditto";
-
-        when(mockInputConverter.stringToUnsignedInteger(any))
-            .thenReturn(Right(tPokedexId.id));
 
         when(mockGetConcreteName(any))
             .thenAnswer((_) async => Left(CacheFailure()));
@@ -262,7 +240,7 @@ void main() {
 
         expectLater(bloc.stream, emitsInOrder(expected));
         //act
-        bloc.add(const GetPokemonName(input));
+        bloc.add(GetPokemonName(tPokedexId.name));
       },
     );
   });
